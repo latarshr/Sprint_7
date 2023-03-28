@@ -1,2 +1,42 @@
-package PACKAGE_NAME;public class CourierProfile {
+public class CourierProfile {
+    private String login;
+    private String password;
+    private String firstName;
+
+    public CourierProfile(String login, String password, String firstName) {
+        this.login = login;
+        this.password = password;
+        this.firstName = firstName;
+    }
+
+    public CourierProfile(String login, String password) {
+        this.login = login;
+        this.password = password;
+    }
+
+    public CourierProfile(String login) {
+        this.login = login;
+    }
+    public CourierProfile(){
+    }
+
+    public String getLogin() {
+        return login;
+    }
+    public void setLogin(String login) {
+        this.login = login;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public String getFirstName() {
+        return firstName;
+    }
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
 }
+
