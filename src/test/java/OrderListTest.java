@@ -3,6 +3,12 @@ import io.restassured.RestAssured;
 import jdk.jfr.Description;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
+
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -11,8 +17,11 @@ public class OrderListTest {
     static private String endPointOrder = "/api/v1/orders";
 
     @Before
-    public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
+    public void setUp() throws IOException {
+        Properties prop = new Properties();
+        InputStream input = new FileInputStream("src/main/resources/config.properties");
+        prop.load(input);
+        RestAssured.baseURI = prop.getProperty("baseURI");
     }
 
     @Test

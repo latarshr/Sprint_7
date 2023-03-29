@@ -1,11 +1,17 @@
+import com.github.javafaker.Faker;
+import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import jdk.jfr.Description;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 
 import static io.restassured.RestAssured.delete;
 import static io.restassured.RestAssured.given;
@@ -14,9 +20,9 @@ import static org.hamcrest.Matchers.notNullValue;
 
 public class CourierLoginTest {
 
-    static private String loginTest = RandomStringUtils.randomAlphabetic(10);
-    static private String passwordTest = "09876543";
-    static private String firstNameTest = "Victor";
+    static private String loginTest = new Faker().name().username();
+    static private String passwordTest = new Faker().internet().password();
+    static private String firstNameTest = new Faker().name().firstName();
     // API docs:
 // https://qa-scooter.praktikum-services.ru/docs/#api-Courier-Login
     static private String endPointCreate = "/api/v1/courier";
@@ -24,8 +30,12 @@ public class CourierLoginTest {
     static private String endPointDelete = "/api/v1/courier/";
 
     @Before
-    public void setUp() {
-        RestAssured.baseURI = "http://qa-scooter.praktikum-services.ru/";
+    @Step("Create courier")
+    public void setUp() throws IOException {
+        Properties prop = new Properties();
+        InputStream input = new FileInputStream("src/main/resources/config.properties");
+        prop.load(input);
+        RestAssured.baseURI = prop.getProperty("baseURI");
         CourierProfile courierCreate  = new CourierProfile(loginTest, passwordTest, firstNameTest);
 // Проверяем, что курьер создан для тестов:
         given()
@@ -40,6 +50,7 @@ public class CourierLoginTest {
     }
 
     @After
+    @Step("Delete courier after test")
     public void tearDown() {
         CourierProfile courierDelete  = new CourierProfile(loginTest, passwordTest);
 // Удаляем курьера после тестов:
